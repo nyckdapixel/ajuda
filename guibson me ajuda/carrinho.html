@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho de Compras - Ona Dius</title>
+    <link rel="stylesheet" href="carrinho.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            overflow-x: hidden;
+            padding: 0 20px;
+            margin: 0;
+        }
+        header {
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .cart-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.3);
+            animation: fadeIn 1s ease-in;
+            width: 100%;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+        .cart-item:hover {
+            transform: scale(1.05);
+        }
+        .cart-item img {
+            width: 80px;
+            border-radius: 10px;
+            margin-right: 15px;
+        }
+        .cart-item div {
+            flex: 1;
+            text-align: left;
+        }
+        .cart-item h3 {
+            margin: 5px 0;
+        }
+        .remove-item {
+            background-color: #ff0000;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .remove-item:hover {
+            background-color: #cc0000;
+        }
+        .checkout-btn, .back-to-store-btn {
+            display: inline-block;
+            padding: 12px 25px;
+            margin-top: 20px;
+            border: none;
+            background: #00ffcc;
+            color: black;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .checkout-btn:hover, .back-to-store-btn:hover {
+            background: #ffcc00;
+        }
+        .cart-total {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 768px) {
+            header {
+                font-size: 18px;
+            }
+            .cart-container {
+                padding: 15px;
+                width: 100%;
+                margin-top: 20px;
+            }
+            .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 10px;
+                margin: 10px 0;
+            }
+            .cart-item img {
+                width: 60px;
+            }
+            .cart-item div {
+                text-align: left;
+                margin-bottom: 10px;
+            }
+            .remove-item {
+                width: 100%;
+                margin-top: 10px;
+            }
+            .checkout-btn, .back-to-store-btn {
+                width: 100%;
+                font-size: 18px;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cart-item h3 {
+                font-size: 14px;
+            }
+            .cart-total {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Ona Dius</h1>
+    </header>
+
+    <div class="cart-container">
+        <h2>Carrinho de Compras</h2>
+        <div class="cart-items" id="cart-items"></div>
+        <div class="cart-total" id="cart-total">
+            <h3 id="total-price">Total: R$ 0,00</h3>
+            <a href="checkout.html" class="checkout-btn" id="checkout-btn" style="display: none;">Finalizar Compra</a>
+            <a href="index.html" class="back-to-store-btn">Voltar para a loja</a>
+        </div>
+    </div>
+
+    <script>
+    function loadCart() {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartItemsContainer = document.getElementById('cart-items');
+        const totalPriceElement = document.getElementById('total-price');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        
+        cartItemsContainer.innerHTML = '';
+        let total = 0;
+        
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = '<p>Seu carrinho está vazio.</p>';
+            totalPriceElement.textContent = 'Total: R$ 0,00'; // Corrigido para limpar o total
+            checkoutBtn.style.display = 'none';
+            return;
+        }
+        
+        cart.forEach(item => {
+            const itemElement = document.createElement('div');
+            itemElement.classList.add('cart-item');
+            
+            itemElement.innerHTML = `
+                <img src="${item.image}" alt="${item.name}">
+                <div>
+                    <h3>${item.name}</h3>
+                    <p>R$ ${parseFloat(item.price * item.quantity).toFixed(2)}</p>
+                    <p>Quantidade: ${item.quantity}</p>
+                </div>
+                <button class="remove-item" data-id="${item.id}">Remover</button>
+            `;
+            cartItemsContainer.appendChild(itemElement);
+            
+            total += item.price * item.quantity;
+        });
+        
+        totalPriceElement.textContent = `Total: R$ ${total.toFixed(2)}`;
+        checkoutBtn.style.display = 'inline-block';
+        
+        document.querySelectorAll('.remove-item').forEach(button => {
+            button.addEventListener('click', function () {
+                removeFromCart(this.getAttribute('data-id'));
+            });
+        });
+    }
+    
+    function removeFromCart(productId) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart = cart.filter(item => item.id !== productId);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        loadCart(); // Recarrega o carrinho e atualiza o total
+    }
+    
+    window.onload = loadCart;
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido Processado - Ona Dius</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .ok-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.3);
+            animation: fadeIn 1s ease-in;
+        }
+
+        .ok-container img {
+            width: 120px;
+            border-radius: 5px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-top: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-btn {
+            margin-top: 30px;
+            padding: 10px 20px;
+            background: #00ffcc;
+            color: black;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 18px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #ffcc00;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ok-container">
+        <img src="ok.jpg" alt="Pedido Processado">
+        <h1>Seu Pedido foi Processado!</h1>
+        <p>Em alguns minutos, seu pedido será confirmado e o valor será descontado da sua fatura. <br>Obrigado pela preferência!</p>
+        <a href="index.html" class="back-btn">Voltar para a Página Inicial</a>
+    </div>
+
+</body>
+</html>
